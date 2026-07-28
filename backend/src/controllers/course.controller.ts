@@ -67,7 +67,7 @@ export async function getMyCourses(req: AuthRequest, res: Response): Promise<voi
 
     const myCourses = await Promise.all(
       purchases.map(async (purchase) => {
-        const course = purchase.courseId as InstanceType<typeof Course>;
+        const course = purchase.courseId as unknown as InstanceType<typeof Course>;
         const progress = await Progress.findOne({
           userId: req.user!._id,
           courseId: course._id,

@@ -11,7 +11,7 @@ router.use(authenticate);
 // POST /api/purchases/:courseId - Grant self-purchase (for manual/direct payment flow)
 router.post('/:courseId', async (req: AuthRequest, res: Response) => {
   try {
-    const { courseId } = req.params;
+    const courseId = req.params.courseId as string;
     const { transactionId, amount } = req.body;
 
     const course = await Course.findById(courseId);
@@ -28,13 +28,13 @@ router.post('/:courseId', async (req: AuthRequest, res: Response) => {
 
     const purchase = await Purchase.create({
       userId: req.user!._id,
-      courseId,
+      courseId: courseId as any,
       amount: amount || course.price,
       status: 'completed',
       transactionId,
     });
 
-    res.status(201).json({ success: true, purchase: { id: purchase._id } });
+    res.status(201).json({ success: true, purchase: { id: (purchase as any)._id } });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Purchase failed' });
   }
