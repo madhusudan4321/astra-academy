@@ -38,20 +38,21 @@ export function setAuthCookies(
   accessToken: string,
   refreshToken: string
 ): void {
-  const isProd = process.env.NODE_ENV === 'production';
+  // Use COOKIE_SECURE env variable if set, otherwise default to false for HTTP deployments
+  const isSecure = process.env.COOKIE_SECURE === 'true';
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'strict' : 'lax',
+    secure: isSecure,
+    sameSite: isSecure ? 'none' : 'lax',
     maxAge: 15 * 60 * 1000, // 15 minutes
     path: '/',
   });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: isProd ? 'strict' : 'lax',
+    secure: isSecure,
+    sameSite: isSecure ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
   });
