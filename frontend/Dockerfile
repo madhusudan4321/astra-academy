@@ -9,6 +9,8 @@ RUN npm install
 
 COPY . .
 
+ENV NEXT_PUBLIC_API_URL=""
+
 RUN npm run build
 
 # Stage 2 - Production

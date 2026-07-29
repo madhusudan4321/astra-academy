@@ -2,8 +2,14 @@ import axios from 'axios';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
+const getBaseURL = () => {
+  if (!API_BASE || API_BASE === '/api') return '/api';
+  if (API_BASE.endsWith('/api')) return API_BASE;
+  return `${API_BASE}/api`;
+};
+
 const api = axios.create({
-  baseURL: API_BASE ? `${API_BASE}/api` : '/api',
+  baseURL: getBaseURL(),
   withCredentials: true, // Send HTTP-only cookies
   headers: {
     'Content-Type': 'application/json',
