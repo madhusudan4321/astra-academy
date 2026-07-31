@@ -24,14 +24,14 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
 
   useEffect(() => {
     if (!loading && !user) {
-      router.replace('/login');
+      window.location.href = '/login';
     }
-  }, [user, loading, router]);
+  }, [user, loading]);
 
   const handleLogout = async () => {
     setLoggingOut(true);
     await logout();
-    router.replace('/login');
+    window.location.href = '/login';
   };
 
   if (loading) {

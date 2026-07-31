@@ -1,32 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PUBLIC_PATHS = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
-const ADMIN_PATHS = ['/admin'];
-
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // Allow public paths and Next.js internals
-  if (
-    PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith('/_next')) ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/favicon')
-  ) {
-    return NextResponse.next();
-  }
-
-  // Check authentication via cookies
-  const accessToken = request.cookies.get('accessToken')?.value;
-  const refreshToken = request.cookies.get('refreshToken')?.value;
-
-  const isAuthenticated = accessToken || refreshToken;
-
-  if (!isAuthenticated) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
+  // Auth is handled client-side by the (protected)/layout.tsx via AuthContext.
+  // Server-side cookie checks don't work in cross-origin deployments where
+  // cookies are set on the backend domain, not the frontend domain.
+  // This middleware is kept as a hook for future server-side checks (e.g., maintenance mode).
   return NextResponse.next();
 }
 
@@ -35,3 +13,4 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|public).*)',
   ],
 };
+
