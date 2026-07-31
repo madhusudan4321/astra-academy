@@ -38,8 +38,8 @@ export function setAuthCookies(
   accessToken: string,
   refreshToken: string
 ): void {
-  // Use COOKIE_SECURE env variable if set, otherwise default to false for HTTP deployments
-  const isSecure = process.env.COOKIE_SECURE === 'true';
+  // In production (Render, etc.), always use secure cookies since traffic is HTTPS
+  const isSecure = process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production';
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
@@ -59,6 +59,12 @@ export function setAuthCookies(
 }
 
 export function clearAuthCookies(res: import('express').Response): void {
-  res.clearCookie('accessToken', { path: '/' });
-  res.clearCookie('refreshToken', { path: '/' });
+  const isSecure = process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production';
+  const cookieOptions = {
+    path: '/',
+    secure: isSecure,
+    sameSite: (isSecure ? 'none' : 'lax') as 'none' | 'lax',
+  };
+  res.clearCookie('accessToken', cookieOptions);
+  res.clearCookie('refreshToken', cookieOptions);
 }

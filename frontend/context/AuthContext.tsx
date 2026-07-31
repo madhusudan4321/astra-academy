@@ -38,6 +38,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Skip auto-refresh on auth pages to avoid 401 → refresh → 401 loop
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const authPages = ['/login', '/register', '/forgot-password'];
+      if (authPages.includes(path)) {
+        setLoading(false);
+        return;
+      }
+    }
     refreshUser();
   }, [refreshUser]);
 

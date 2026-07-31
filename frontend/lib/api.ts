@@ -16,23 +16,58 @@ const api = axios.create({
   },
 });
 
+// Auth endpoints that should never trigger a token refresh retry
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/logout', '/auth/forgot-password'];
+
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (value?: unknown) => void; reject: (reason?: unknown) => void }> = [];
+
+const processQueue = (error: unknown | null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve();
+    }
+  });
+  failedQueue = [];
+};
+
 // Response interceptor to handle 401 gracefully
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const requestUrl = originalRequest?.url || '';
+
+    // Never retry auth endpoints — prevents infinite refresh loops
+    const isAuthEndpoint = AUTH_ENDPOINTS.some((ep) => requestUrl.includes(ep));
+    if (isAuthEndpoint) {
+      return Promise.reject(error);
+    }
 
     // If 401 and not a retry, attempt refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
+
+      if (isRefreshing) {
+        // Queue this request until the ongoing refresh completes
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(() => api(originalRequest));
+      }
+
+      isRefreshing = true;
       try {
         await api.post('/auth/refresh');
+        processQueue(null);
         return api(originalRequest);
-      } catch {
-        // Refresh failed - redirect to login
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
+      } catch (refreshError) {
+        processQueue(refreshError);
+        // Don't redirect here — let AuthContext handle navigation
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 

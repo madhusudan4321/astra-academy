@@ -40,7 +40,7 @@ export async function authenticate(req: AuthRequest, res: Response, next: NextFu
     const payload: TokenPayload = { userId: decoded.userId, role: decoded.role };
     const newAccessToken = generateAccessToken(payload);
 
-    const isSecure = process.env.COOKIE_SECURE === 'true';
+    const isSecure = process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production';
     res.cookie('accessToken', newAccessToken, {
       httpOnly: true,
       secure: isSecure,
