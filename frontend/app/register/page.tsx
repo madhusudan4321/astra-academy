@@ -43,7 +43,8 @@ export default function RegisterPage() {
     try {
       await register(name, email, password);
       toast.success('Welcome to Astra Academy, Scholar!');
-      router.replace('/dashboard');
+      // Hard navigation ensures cookies are sent with the request
+      window.location.href = '/dashboard';
     } catch (err: any) {
       const msg = err?.response?.data?.message || 'Registration failed. Try again.';
       toast.error(msg);

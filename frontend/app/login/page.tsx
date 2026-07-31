@@ -25,9 +25,9 @@ function LoginContent() {
   useEffect(() => {
     setMounted(true);
     if (user) {
-      router.replace(redirect);
+      window.location.href = redirect;
     }
-  }, [user, router, redirect]);
+  }, [user, redirect]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +40,8 @@ function LoginContent() {
     try {
       await login(email, password);
       toast.success('Welcome back, Scholar!');
-      router.replace('/dashboard');
+      // Hard navigation ensures cookies are sent with the request
+      window.location.href = '/dashboard';
     } catch (err: any) {
       const msg = err?.response?.data?.message || 'The gates remain sealed. Check your credentials.';
       toast.error(msg);
