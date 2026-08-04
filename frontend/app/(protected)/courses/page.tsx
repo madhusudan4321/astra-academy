@@ -3,8 +3,17 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { courseAPI } from '@/lib/api';
-import { BookOpen, Search, Clock, Layers, Tag, ArrowRight, CheckCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { courseAPI, purchaseAPI } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
+import { BookOpen, Search, Clock, Layers, Tag, ArrowRight, CheckCircle, Loader2, ShoppingCart } from 'lucide-react';
+
+/* global Razorpay type for TypeScript */
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 interface CourseItem {
   id: string;
@@ -20,21 +29,24 @@ interface CourseItem {
 }
 
 export default function CoursesPage() {
+  const { user } = useAuth();
   const [courses, setCourses] = useState<CourseItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [buyingCourseId, setBuyingCourseId] = useState<string | null>(null);
+
+  const fetchCourses = async () => {
+    try {
+      const res = await courseAPI.getAll();
+      setCourses(res.data.courses || []);
+    } catch {
+      setCourses([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchCourses() {
-      try {
-        const res = await courseAPI.getAll();
-        setCourses(res.data.courses || []);
-      } catch {
-        setCourses([]);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchCourses();
   }, []);
 
@@ -48,6 +60,84 @@ export default function CoursesPage() {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     return hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+  };
+
+  const handleBuy = async (course: CourseItem) => {
+    if (buyingCourseId) return; // Prevent double-clicks
+    setBuyingCourseId(course.id);
+
+    try {
+      const res = await purchaseAPI.createOrder(course.id);
+      const data = res.data;
+
+      // Handle free courses — no Razorpay needed
+      if (data.free) {
+        toast.success('Course unlocked! 🎉');
+        await fetchCourses();
+        setBuyingCourseId(null);
+        return;
+      }
+
+      // Ensure Razorpay SDK is loaded
+      if (!window.Razorpay) {
+        toast.error('Payment system is loading. Please try again.');
+        setBuyingCourseId(null);
+        return;
+      }
+
+      const options = {
+        key: data.key,
+        amount: data.order.amount,
+        currency: data.order.currency,
+        name: 'Astra Academy',
+        description: course.title,
+        order_id: data.order.id,
+        prefill: {
+          name: user?.name || '',
+          email: user?.email || '',
+        },
+        theme: {
+          color: '#c9a227',
+          backdrop_color: 'rgba(5,3,8,0.85)',
+        },
+        handler: async (response: {
+          razorpay_order_id: string;
+          razorpay_payment_id: string;
+          razorpay_signature: string;
+        }) => {
+          try {
+            await purchaseAPI.verify(response);
+            toast.success('Payment successful! Course unlocked 🎉');
+            await fetchCourses();
+          } catch {
+            toast.error('Payment verification failed. Contact support if amount was deducted.');
+          } finally {
+            setBuyingCourseId(null);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setBuyingCourseId(null);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', (response: any) => {
+        toast.error(response.error?.description || 'Payment failed. Please try again.');
+        setBuyingCourseId(null);
+      });
+      rzp.open();
+    } catch (err: any) {
+      const msg = err?.response?.data?.message;
+      if (msg === 'Already purchased') {
+        toast.success('You already own this course!');
+        await fetchCourses();
+      } else {
+        toast.error(msg || 'Failed to initiate payment');
+      }
+      setBuyingCourseId(null);
+    }
   };
 
   return (
@@ -182,14 +272,36 @@ export default function CoursesPage() {
                     </motion.button>
                   </Link>
                 ) : (
-                  <div className="text-center py-2.5 rounded-xl text-xs"
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleBuy(course)}
+                    disabled={buyingCourseId === course.id}
+                    className="w-full rounded-xl text-xs py-2.5 font-semibold transition-all cursor-pointer"
                     style={{
-                      background: 'rgba(201,162,39,0.06)',
-                      border: '1px solid rgba(201,162,39,0.12)',
-                      color: 'var(--astra-text-muted)',
-                    }}>
-                    Contact admin for access
-                  </div>
+                      background: buyingCourseId === course.id
+                        ? 'rgba(201,162,39,0.15)'
+                        : 'linear-gradient(135deg, rgba(201,162,39,0.2), rgba(201,162,39,0.08))',
+                      border: '1px solid rgba(201,162,39,0.35)',
+                      color: 'var(--astra-gold)',
+                    }}
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      {buyingCourseId === course.id ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" /> Processing...
+                        </>
+                      ) : course.price === 0 ? (
+                        <>
+                          <ShoppingCart className="w-3.5 h-3.5" /> Enroll Free
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className="w-3.5 h-3.5" /> Buy Course — ₹{course.price}
+                        </>
+                      )}
+                    </span>
+                  </motion.button>
                 )}
               </div>
             </motion.div>

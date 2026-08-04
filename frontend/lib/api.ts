@@ -111,6 +111,17 @@ export const progressAPI = {
     api.post(`/progress/${courseId}/lesson/${lessonId}/complete`),
 };
 
+// Purchase endpoints
+export const purchaseAPI = {
+  createOrder: (courseId: string) =>
+    api.post('/purchases/create-order', { courseId }),
+  verify: (data: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }) => api.post('/purchases/verify', data),
+};
+
 // User endpoints
 export const userAPI = {
   getProfile: () => api.get('/users/profile'),

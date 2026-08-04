@@ -9,6 +9,8 @@ export interface IPurchase extends Document {
   status: 'pending' | 'completed' | 'refunded';
   paymentMethod?: string;
   transactionId?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,10 +24,12 @@ const purchaseSchema = new Schema<IPurchase>(
     status: {
       type: String,
       enum: ['pending', 'completed', 'refunded'],
-      default: 'completed',
+      default: 'pending',
     },
-    paymentMethod: { type: String },
+    paymentMethod: { type: String, default: 'razorpay' },
     transactionId: { type: String },
+    razorpayOrderId: { type: String },
+    razorpayPaymentId: { type: String },
   },
   { timestamps: true }
 );
