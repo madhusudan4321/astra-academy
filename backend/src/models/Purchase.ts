@@ -34,8 +34,16 @@ const purchaseSchema = new Schema<IPurchase>(
   { timestamps: true }
 );
 
-// Compound index to prevent duplicate purchases
-purchaseSchema.index({ userId: 1, courseId: 1 }, { unique: true });
+// Prevent duplicate *completed* purchases (partial unique index).
+// Pending/refunded records are allowed to coexist so the payment flow
+// can safely create and clean-up pending orders without duplicate-key errors.
+purchaseSchema.index(
+  { userId: 1, courseId: 1 },
+  { unique: true, partialFilterExpression: { status: 'completed' } }
+);
+
+// Speed up look-ups by order ID during payment verification
+purchaseSchema.index({ razorpayOrderId: 1 });
 
 const Purchase: Model<IPurchase> = mongoose.model<IPurchase>('Purchase', purchaseSchema);
 export default Purchase;
