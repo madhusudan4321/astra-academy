@@ -460,7 +460,7 @@ export default function CourseViewerPage() {
   return (
     <div className="flex flex-col lg:flex-row h-full">
       {/* Main content - video + info */}
-      <div className="flex-1 min-w-0 p-4 md:p-6 overflow-auto">
+      <div className="flex-1 min-w-0 p-5 md:p-8 overflow-auto">
         {/* Course progress bar */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
@@ -502,7 +502,7 @@ export default function CourseViewerPage() {
             key={currentLesson.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-5"
+            className="mt-6"
           >
             <h2 className="font-fantasy text-xl font-bold mb-2" style={{ color: 'var(--astra-text)' }}>
               {currentLesson.title}
@@ -570,7 +570,7 @@ export default function CourseViewerPage() {
         className="w-full lg:w-80 xl:w-96 shrink-0 border-t lg:border-t-0 lg:border-l overflow-auto"
         style={{ borderColor: 'rgba(201,162,39,0.12)', background: 'rgba(8,5,18,0.5)', maxHeight: '100vh' }}
       >
-        <div className="p-4">
+        <div className="p-5">
           <h3 className="font-fantasy text-sm font-bold mb-1" style={{ color: 'var(--astra-text)' }}>
             {course.title}
           </h3>
@@ -579,7 +579,7 @@ export default function CourseViewerPage() {
           </p>
         </div>
 
-        <div className="space-y-1 px-2 pb-4">
+        <div className="space-y-1 px-3 pb-5">
           {course.chapters
             .sort((a, b) => a.order - b.order)
             .map((chapter) => (
@@ -619,7 +619,7 @@ export default function CourseViewerPage() {
                             <button
                               key={lesson.id}
                               onClick={() => setCurrentLessonId(lesson.id)}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 ml-3 rounded-lg text-left transition-all"
+                              className="w-full flex items-center gap-2.5 px-4 py-2.5 ml-3 rounded-lg text-left transition-all"
                               style={{
                                 background: isCurrent ? 'rgba(201,162,39,0.12)' : 'transparent',
                                 borderLeft: isCurrent ? '2px solid #c9a227' : '2px solid transparent',

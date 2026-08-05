@@ -125,7 +125,7 @@ export default function ProfilePage() {
   if (!profile) return null;
 
   return (
-    <div className="p-6 md:p-8 max-w-4xl mx-auto">
+    <div className="p-6 md:p-10 max-w-4xl mx-auto">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="font-fantasy text-3xl md:text-4xl font-bold text-gold-gradient mb-2">
@@ -144,7 +144,7 @@ export default function ProfilePage() {
           transition={{ delay: 0.1 }}
           className="lg:col-span-1"
         >
-          <div className="glass-card rounded-2xl p-6 text-center">
+          <div className="glass-card rounded-2xl p-7 text-center">
             {/* Avatar */}
             <div className="mx-auto mb-5">
               <div
@@ -230,7 +230,7 @@ export default function ProfilePage() {
           className="lg:col-span-2 space-y-6"
         >
           {/* Edit Name */}
-          <div className="glass-card rounded-2xl p-6">
+          <div className="glass-card rounded-2xl p-7">
             <div className="flex items-center gap-2 mb-5">
               <User className="w-4 h-4" style={{ color: 'var(--astra-gold)' }} />
               <h3 className="font-fantasy text-sm font-bold" style={{ color: 'var(--astra-text)' }}>
@@ -315,7 +315,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Change Password */}
-          <div className="glass-card rounded-2xl p-6">
+          <div className="glass-card rounded-2xl p-7">
             <div className="flex items-center gap-2 mb-5">
               <Lock className="w-4 h-4" style={{ color: 'var(--astra-gold)' }} />
               <h3 className="font-fantasy text-sm font-bold" style={{ color: 'var(--astra-text)' }}>

@@ -50,7 +50,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="p-6 md:p-8 max-w-6xl mx-auto">
+    <div className="p-6 md:p-10 max-w-6xl mx-auto">
       {/* Welcome Banner */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -193,8 +193,8 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Info */}
-                  <div className="p-5">
-                    <h3 className="font-fantasy text-sm font-bold mb-2 line-clamp-1" style={{ color: 'var(--astra-text)' }}>
+                  <div className="p-6">
+                    <h3 className="font-fantasy text-base font-bold mb-2 line-clamp-1" style={{ color: 'var(--astra-text)' }}>
                       {course.title}
                     </h3>
                     <p className="text-xs mb-4 line-clamp-2" style={{ color: 'var(--astra-text-muted)' }}>

@@ -141,7 +141,7 @@ export default function CoursesPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-6xl mx-auto">
+    <div className="p-6 md:p-10 max-w-6xl mx-auto">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <h1 className="font-fantasy text-3xl md:text-4xl font-bold text-gold-gradient mb-2">
@@ -225,8 +225,8 @@ export default function CoursesPage() {
               </div>
 
               {/* Info */}
-              <div className="p-5">
-                <h3 className="font-fantasy text-sm font-bold mb-2 line-clamp-1" style={{ color: 'var(--astra-text)' }}>
+              <div className="p-6">
+                <h3 className="font-fantasy text-base font-bold mb-2 line-clamp-1" style={{ color: 'var(--astra-text)' }}>
                   {course.title}
                 </h3>
                 <p className="text-xs mb-4 line-clamp-2" style={{ color: 'var(--astra-text-muted)' }}>

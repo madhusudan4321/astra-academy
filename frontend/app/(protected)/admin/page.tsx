@@ -113,9 +113,9 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto">
+    <div className="p-6 md:p-10 max-w-7xl mx-auto">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <div className="flex items-center gap-2 mb-2">
           <Crown className="w-5 h-5" style={{ color: 'var(--astra-gold)' }} />
           <h1 className="font-fantasy text-3xl md:text-4xl font-bold text-gold-gradient">
@@ -128,7 +128,7 @@ export default function AdminPage() {
       </motion.div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 rounded-xl mb-8" style={{ background: 'var(--astra-stone)' }}>
+      <div className="flex gap-1 p-1.5 rounded-xl mb-8" style={{ background: 'var(--astra-stone)' }}>
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
@@ -136,7 +136,7 @@ export default function AdminPage() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-medium transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium transition-all"
               style={{
                 background: isActive ? 'rgba(201,162,39,0.15)' : 'transparent',
                 border: isActive ? '1px solid rgba(201,162,39,0.3)' : '1px solid transparent',
@@ -193,7 +193,7 @@ function DashboardTab() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
       {/* Stats grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
         {statCards.map((s, i) => {
           const Icon = s.icon;
           return (
@@ -202,23 +202,23 @@ function DashboardTab() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * i }}
-              className="glass-card rounded-xl p-5"
+              className="glass-card rounded-xl p-6"
             >
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center"
                   style={{ background: `${s.color}15`, border: `1px solid ${s.color}30` }}>
                   <Icon className="w-5 h-5" style={{ color: s.color }} />
                 </div>
               </div>
               <p className="font-fantasy text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--astra-text-muted)' }}>{s.label}</p>
+              <p className="text-xs mt-1.5" style={{ color: 'var(--astra-text-muted)' }}>{s.label}</p>
             </motion.div>
           );
         })}
       </div>
 
       {/* Recent Students */}
-      <div className="glass-card rounded-2xl p-5">
+      <div className="glass-card rounded-2xl p-6">
         <h3 className="font-fantasy text-sm font-bold mb-4" style={{ color: 'var(--astra-text)' }}>
           Recent Scholars
         </h3>
@@ -229,7 +229,7 @@ function DashboardTab() {
         ) : (
           <div className="space-y-3">
             {recentStudents.map((s) => (
-              <div key={s._id} className="flex items-center gap-3 p-3 rounded-xl"
+              <div key={s._id} className="flex items-center gap-4 p-3.5 rounded-xl"
                 style={{ background: 'rgba(201,162,39,0.03)' }}>
                 <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
                   style={{ background: 'linear-gradient(135deg, #c9a227, #7a6018)', color: '#050308' }}>
@@ -239,7 +239,7 @@ function DashboardTab() {
                   <p className="text-sm font-medium truncate" style={{ color: 'var(--astra-text)' }}>{s.name}</p>
                   <p className="text-xs truncate" style={{ color: 'var(--astra-text-dim)' }}>{s.email}</p>
                 </div>
-                <span className="text-[10px] shrink-0" style={{ color: 'var(--astra-text-dim)' }}>
+                <span className="text-[11px] shrink-0 whitespace-nowrap pl-2" style={{ color: 'var(--astra-text-dim)' }}>
                   {new Date(s.createdAt).toLocaleDateString()}
                 </span>
               </div>
@@ -337,7 +337,7 @@ function CoursesTab() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.03 * i }}
-              className="glass-card rounded-xl p-4 flex items-center gap-4"
+              className="glass-card rounded-xl p-5 flex items-center gap-4"
             >
               {/* Thumbnail */}
               <div className="w-20 h-14 rounded-lg overflow-hidden shrink-0"
@@ -469,16 +469,16 @@ function CreateCourseModal({
 
   return (
     <ModalOverlay onClose={onClose}>
-      <div className="glass-card rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-auto"
+      <div className="glass-card rounded-2xl w-full max-w-xl mx-4 max-h-[90vh] overflow-auto"
         style={{ background: 'var(--astra-stone)' }}>
-        <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: 'var(--astra-border)' }}>
+        <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'var(--astra-border)' }}>
           <h3 className="font-fantasy text-sm font-bold text-gold-gradient">Create New Course</h3>
           <button onClick={onClose} style={{ color: 'var(--astra-text-dim)' }}>
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           <FormField label="Title *">
             <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
               placeholder="Course title" className="input-fantasy w-full rounded-xl text-sm" style={{ padding: '10px 14px' }} />
@@ -531,7 +531,7 @@ function CreateCourseModal({
               </span>
             </motion.button>
             <button type="button" onClick={onClose}
-              className="px-4 py-2.5 rounded-xl text-xs"
+              className="px-6 py-2.5 rounded-xl text-xs"
               style={{ border: '1px solid var(--astra-border)', color: 'var(--astra-text-muted)' }}>
               Cancel
             </button>
@@ -678,10 +678,10 @@ function ManageCourseModal({
 
   return (
     <ModalOverlay onClose={onClose}>
-      <div className="glass-card rounded-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-auto"
+      <div className="glass-card rounded-2xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-auto"
         style={{ background: 'var(--astra-stone)' }}>
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b sticky top-0 z-10"
+        <div className="flex items-center justify-between p-6 border-b sticky top-0 z-10"
           style={{ borderColor: 'var(--astra-border)', background: 'var(--astra-stone)' }}>
           <div>
             <h3 className="font-fantasy text-sm font-bold text-gold-gradient">Manage Course</h3>
@@ -692,7 +692,7 @@ function ManageCourseModal({
           </button>
         </div>
 
-        <div className="p-5">
+        <div className="p-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--astra-gold)' }} />
@@ -972,7 +972,7 @@ function StudentsTab() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.03 * i }}
-              className="glass-card rounded-xl p-4 flex items-center gap-4"
+              className="glass-card rounded-xl p-5 flex items-center gap-4"
             >
               <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shrink-0"
                 style={{ background: 'linear-gradient(135deg, #c9a227, #7a6018)', color: '#050308' }}>

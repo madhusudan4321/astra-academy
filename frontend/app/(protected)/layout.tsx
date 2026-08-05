@@ -77,14 +77,14 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
       </div>
 
       {/* User info */}
-      <div className="mx-4 mb-6 p-3 rounded-xl"
+      <div className="mx-4 mb-6 p-3.5 rounded-xl overflow-hidden"
         style={{ background: 'rgba(201,162,39,0.05)', border: '1px solid rgba(201,162,39,0.1)' }}>
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm shrink-0"
             style={{ background: 'linear-gradient(135deg, #c9a227, #7a6018)', color: '#050308' }}>
             {user.name.charAt(0).toUpperCase()}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-medium truncate" style={{ color: 'var(--astra-text)' }}>{user.name}</p>
             <p className="text-xs truncate" style={{ color: 'var(--astra-text-dim)' }}>{user.email}</p>
           </div>
@@ -182,7 +182,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         initial={false}
         animate={{ x: sidebarOpen ? 0 : '-100%' }}
         transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-        className="fixed top-0 left-0 bottom-0 z-30 w-64 flex-shrink-0 flex flex-col lg:hidden"
+        className="fixed top-0 left-0 bottom-0 z-30 w-72 flex-shrink-0 flex flex-col lg:hidden"
         style={{
           background: 'linear-gradient(180deg, #0d0917 0%, #080512 100%)',
           borderRight: '1px solid rgba(201,162,39,0.12)',
@@ -192,7 +192,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
       </motion.aside>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:flex flex-col w-64 shrink-0"
+      <div className="hidden lg:flex flex-col w-72 shrink-0"
         style={{
           background: 'linear-gradient(180deg, #0d0917 0%, #080512 100%)',
           borderRight: '1px solid rgba(201,162,39,0.12)',
