@@ -130,11 +130,12 @@ export default function CoursesPage() {
       rzp.open();
     } catch (err: any) {
       const msg = err?.response?.data?.message;
+      const detail = err?.response?.data?.error;
       if (msg === 'Already purchased') {
         toast.success('You already own this course!');
         await fetchCourses();
       } else {
-        toast.error(msg || 'Failed to initiate payment');
+        toast.error(detail || msg || 'Failed to initiate payment');
       }
       setBuyingCourseId(null);
     }

@@ -84,9 +84,21 @@ router.post('/create-order', async (req: AuthRequest, res: Response) => {
       },
       key: process.env.RAZORPAY_KEY_ID,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Create order error:', error);
-    res.status(500).json({ success: false, message: 'Failed to create order' });
+    // Include detailed error info for debugging
+    const details = error?.error?.description || error?.message || 'Unknown error';
+    const statusCode = error?.statusCode || 500;
+    console.error('Razorpay error details:', {
+      statusCode,
+      details,
+      errorBody: error?.error,
+    });
+    res.status(statusCode === 401 ? 502 : 500).json({
+      success: false,
+      message: 'Failed to create order',
+      error: details,
+    });
   }
 });
 
