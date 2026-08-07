@@ -6,7 +6,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { courseAPI, purchaseAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { BookOpen, Search, Clock, Layers, Tag, ArrowRight, CheckCircle, Loader2, ShoppingCart } from 'lucide-react';
+import { BookOpen, Search, Clock, Layers, Tag, ArrowRight, CheckCircle, Loader2, ShoppingCart, Sparkles, Library } from 'lucide-react';
 
 /* global Razorpay type for TypeScript */
 declare global {
@@ -142,121 +142,155 @@ export default function CoursesPage() {
   };
 
   return (
-    <div className="p-6 md:p-10 max-w-6xl mx-auto">
+    <div className="p-6 md:p-10 lg:p-14 max-w-7xl mx-auto space-y-10">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="font-fantasy text-3xl md:text-4xl font-bold text-gold-gradient mb-2">
-          The Grand Library
-        </h1>
-        <p className="text-sm" style={{ color: 'var(--astra-text-muted)' }}>
-          Discover ancient tomes of knowledge. Each course is a gateway to mastery.
-        </p>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative overflow-hidden rounded-3xl p-10 md:p-14"
+        style={{
+          background: 'linear-gradient(135deg, rgba(201,162,39,0.10) 0%, rgba(74,29,110,0.12) 50%, rgba(201,162,39,0.06) 100%)',
+          border: '1px solid rgba(201,162,39,0.15)',
+        }}
+      >
+        {/* Decorative orb */}
+        <div className="absolute top-0 right-0 w-80 h-80 opacity-10"
+          style={{
+            background: 'radial-gradient(circle, rgba(201,162,39,0.5) 0%, transparent 70%)',
+          }}
+        />
+        <div className="relative z-10 flex items-start justify-between flex-wrap gap-6">
+          <div>
+            <div className="flex items-center gap-2.5 mb-4">
+              <Library className="w-5 h-5" style={{ color: 'var(--astra-gold)' }} />
+              <span className="text-xs font-fantasy tracking-[0.2em] uppercase" style={{ color: 'var(--astra-gold-dim)' }}>
+                Knowledge Awaits
+              </span>
+            </div>
+            <h1 className="font-fantasy text-4xl md:text-5xl font-bold text-gold-gradient mb-4">
+              The Grand Library
+            </h1>
+            <p className="text-base md:text-lg max-w-xl leading-relaxed" style={{ color: 'var(--astra-text-muted)' }}>
+              Discover ancient tomes of knowledge. Each course is a gateway to mastery.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--astra-text-dim)' }}>
+            <BookOpen className="w-5 h-5" style={{ color: 'var(--astra-gold-dim)' }} />
+            <span>{courses.length} {courses.length === 1 ? 'course' : 'courses'} available</span>
+          </div>
+        </div>
       </motion.div>
 
       {/* Search */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-        className="relative mb-8">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--astra-gold-dim)' }} />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by title or tag..."
-          className="input-fantasy w-full rounded-xl text-sm"
-          style={{ padding: '12px 16px 12px 44px' }}
-        />
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }}>
+        <div className="relative">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5" style={{ color: 'var(--astra-gold-dim)' }} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by title or tag..."
+            className="input-fantasy w-full rounded-2xl text-base"
+            style={{ padding: '16px 20px 16px 52px' }}
+          />
+        </div>
       </motion.div>
 
       {/* Courses Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="glass-card rounded-xl overflow-hidden">
-              <div className="skeleton h-44 w-full" />
-              <div className="p-5 space-y-3">
-                <div className="skeleton h-5 w-3/4 rounded" />
-                <div className="skeleton h-3 w-full rounded" />
-                <div className="skeleton h-3 w-1/2 rounded" />
-                <div className="skeleton h-10 w-full rounded-xl mt-4" />
+            <div key={i} className="glass-card rounded-2xl overflow-hidden">
+              <div className="skeleton h-56 w-full" />
+              <div className="p-8 space-y-4">
+                <div className="skeleton h-6 w-3/4 rounded" />
+                <div className="skeleton h-4 w-full rounded" />
+                <div className="skeleton h-4 w-1/2 rounded" />
+                <div className="skeleton h-12 w-full rounded-xl mt-4" />
               </div>
             </div>
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          className="glass-card rounded-2xl p-12 text-center">
-          <BookOpen className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--astra-gold-dim)' }} />
-          <h3 className="font-fantasy text-xl font-bold mb-2" style={{ color: 'var(--astra-text)' }}>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          className="glass-card rounded-3xl p-16 text-center">
+          <div className="w-24 h-24 mx-auto mb-8 rounded-2xl flex items-center justify-center"
+            style={{ background: 'rgba(201,162,39,0.1)', border: '1px solid rgba(201,162,39,0.2)' }}>
+            <BookOpen className="w-10 h-10" style={{ color: 'var(--astra-gold-dim)' }} />
+          </div>
+          <h3 className="font-fantasy text-2xl font-bold mb-3" style={{ color: 'var(--astra-text)' }}>
             {search ? 'No Tomes Found' : 'Library is Empty'}
           </h3>
-          <p className="text-sm" style={{ color: 'var(--astra-text-muted)' }}>
-            {search ? 'Try a different search term.' : 'No courses have been published yet. Check back soon.'}
+          <p className="text-base max-w-md mx-auto leading-relaxed" style={{ color: 'var(--astra-text-muted)' }}>
+            {search ? 'Try a different search term to find what you seek.' : 'No courses have been published yet. Check back soon.'}
           </p>
         </motion.div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((course, i) => (
             <motion.div
               key={course.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * i }}
-              className="glass-card rounded-xl overflow-hidden group hover:border-yellow-600/30 transition-all"
+              transition={{ delay: 0.06 * i, duration: 0.5 }}
+              className="glass-card rounded-2xl overflow-hidden group hover:border-yellow-600/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(201,162,39,0.08)]"
             >
               {/* Thumbnail */}
-              <div className="relative h-44 overflow-hidden"
+              <div className="relative h-56 overflow-hidden"
                 style={{ background: 'linear-gradient(135deg, #1a1523, #0a0610)' }}>
                 {course.thumbnailUrl ? (
                   <img src={course.thumbnailUrl} alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <BookOpen className="w-14 h-14" style={{ color: 'var(--astra-gold-dim)' }} />
+                    <BookOpen className="w-16 h-16" style={{ color: 'var(--astra-gold-dim)' }} />
                   </div>
                 )}
 
                 {/* Price badge */}
-                <div className="absolute top-3 right-3 px-3 py-1.5 rounded-full text-xs font-bold"
+                <div className="absolute top-4 right-4 px-4 py-2 rounded-full text-sm font-bold backdrop-blur-sm"
                   style={{
                     background: course.hasPurchased ? 'rgba(34,197,94,0.9)' : 'rgba(201,162,39,0.95)',
                     color: '#050308',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                   }}>
                   {course.hasPurchased ? '✓ Enrolled' : course.price === 0 ? 'Free' : `₹${course.price}`}
                 </div>
               </div>
 
               {/* Info */}
-              <div className="p-6">
-                <h3 className="font-fantasy text-base font-bold mb-2 line-clamp-1" style={{ color: 'var(--astra-text)' }}>
+              <div className="p-8">
+                <h3 className="font-fantasy text-xl font-bold mb-3 line-clamp-1" style={{ color: 'var(--astra-text)' }}>
                   {course.title}
                 </h3>
-                <p className="text-xs mb-4 line-clamp-2" style={{ color: 'var(--astra-text-muted)' }}>
+                <p className="text-sm mb-5 line-clamp-2 leading-relaxed" style={{ color: 'var(--astra-text-muted)' }}>
                   {course.shortDescription}
                 </p>
 
                 {/* Meta */}
-                <div className="flex items-center gap-4 mb-4 text-xs" style={{ color: 'var(--astra-text-dim)' }}>
-                  <span className="flex items-center gap-1">
-                    <Layers className="w-3 h-3" /> {course.totalLessons} lessons
+                <div className="flex items-center gap-5 mb-5 text-sm" style={{ color: 'var(--astra-text-dim)' }}>
+                  <span className="flex items-center gap-1.5">
+                    <Layers className="w-4 h-4" /> {course.totalLessons} lessons
                   </span>
                   {course.totalDuration > 0 && (
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" /> {formatDuration(course.totalDuration)}
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-4 h-4" /> {formatDuration(course.totalDuration)}
                     </span>
                   )}
                 </div>
 
                 {/* Tags */}
                 {course.tags?.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-4">
+                  <div className="flex flex-wrap gap-2 mb-6">
                     {course.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px]"
+                      <span key={tag} className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium"
                         style={{
                           background: 'rgba(201,162,39,0.08)',
-                          border: '1px solid rgba(201,162,39,0.15)',
+                          border: '1px solid rgba(201,162,39,0.18)',
                           color: 'var(--astra-gold-dim)',
                         }}>
-                        <Tag className="w-2.5 h-2.5" /> {tag}
+                        <Tag className="w-3 h-3" /> {tag}
                       </span>
                     ))}
                   </div>
@@ -265,20 +299,20 @@ export default function CoursesPage() {
                 {/* Action */}
                 {course.hasPurchased ? (
                   <Link href={`/courses/${course.id}`}>
-                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                      className="btn-primary w-full rounded-xl text-xs py-2.5">
-                      <span className="flex items-center justify-center gap-2">
-                        <CheckCircle className="w-3.5 h-3.5" /> Enter Course <ArrowRight className="w-3 h-3" />
+                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                      className="btn-primary w-full rounded-xl text-sm py-3.5 font-semibold">
+                      <span className="flex items-center justify-center gap-2.5">
+                        <CheckCircle className="w-4 h-4" /> Enter Course <ArrowRight className="w-4 h-4" />
                       </span>
                     </motion.button>
                   </Link>
                 ) : (
                   <motion.button
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => handleBuy(course)}
                     disabled={buyingCourseId === course.id}
-                    className="w-full rounded-xl text-xs py-2.5 font-semibold transition-all cursor-pointer"
+                    className="w-full rounded-xl text-sm py-3.5 font-semibold transition-all cursor-pointer"
                     style={{
                       background: buyingCourseId === course.id
                         ? 'rgba(201,162,39,0.15)'
@@ -287,18 +321,18 @@ export default function CoursesPage() {
                       color: 'var(--astra-gold)',
                     }}
                   >
-                    <span className="flex items-center justify-center gap-2">
+                    <span className="flex items-center justify-center gap-2.5">
                       {buyingCourseId === course.id ? (
                         <>
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" /> Processing...
+                          <Loader2 className="w-4 h-4 animate-spin" /> Processing...
                         </>
                       ) : course.price === 0 ? (
                         <>
-                          <ShoppingCart className="w-3.5 h-3.5" /> Enroll Free
+                          <Sparkles className="w-4 h-4" /> Enroll Free
                         </>
                       ) : (
                         <>
-                          <ShoppingCart className="w-3.5 h-3.5" /> Buy Course — ₹{course.price}
+                          <ShoppingCart className="w-4 h-4" /> Buy Course — ₹{course.price}
                         </>
                       )}
                     </span>
